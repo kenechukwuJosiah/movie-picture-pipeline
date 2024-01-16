@@ -1,4 +1,4 @@
-name: frontend ci workflow
+name: Frontend Continuous Integration
 
 on:
   workflow_dispatch:
@@ -77,4 +77,7 @@ jobs:
 
       - name: Complete Build
         working-directory: starter/frontend
-        run: echo "Building Completed..."
+        run: |
+          echo "Building... ${{ github.ref }}"
+          docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:3000/ --tag=${{ github.ref }}:latest
+          docker run --name ${{ github.ref }} -p 3000:3000
