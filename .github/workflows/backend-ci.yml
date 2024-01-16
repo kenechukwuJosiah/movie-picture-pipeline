@@ -1,4 +1,4 @@
-name: Frontend Continuous Integration
+name: Backend Continuous Integration
 
 on:
   workflow_dispatch:
@@ -78,6 +78,6 @@ jobs:
       - name: Build App
         working-directory: starter/frontend
         run: |
-          echo "Building... ${{env.GITHUB_RUN_ID}}"
-          docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:3000/ --tag=${{env.GITHUB_RUN_ID}}:latest .
-          docker run --name ${{env.GITHUB_RUN_ID}} -p 3000:3000
+          echo "Building... $GITHUB_RUN_ID"
+          docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:3000/ --tag=$GITHUB_RUN_ID:latest .
+          docker run --name $GITHUB_RUN_ID -p 3000:3000
