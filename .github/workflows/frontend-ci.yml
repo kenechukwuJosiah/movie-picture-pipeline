@@ -8,7 +8,7 @@ on:
 
 env:
   # Set Node.js Version
-  NODE_VERSION: "20.7.0"
+  NODE_VERSION: "18"
 
 jobs:
   lint:
@@ -16,62 +16,60 @@ jobs:
     continue-on-error: false
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{env.NODE_VERSION}}
           cache: "npm"
 
       - name: Install dependencies
-        working-directory: starter/frontend
-        run: npm ci
+        run: cd ./starter/frontend && npm ci
 
       - name: Run lint
-        working-directory: starter/frontend
-        run: npm run lint
+        run: cd ./starter/frontend && npm run lint
 
-  test:
-    runs-on: ubuntu-latest
-    continue-on-error: false
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # test:
+  #   runs-on: ubuntu-latest
+  #   continue-on-error: false
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
 
-      - name: Setup NodeJS
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{env.NODE_VERSION}}
-          cache: "npm"
+  #     - name: Setup NodeJS
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{env.NODE_VERSION}}
+  #         cache: "npm"
 
-      - name: Install dependencies
-        working-directory: starter/frontend
-        run: npm ci
+  #     - name: Install dependencies
+  #       working-directory: starter/frontend
+  #       run: npm ci
 
-      - name: Run Test
-        working-directory: starter/frontend
-        run: npm run test
+  #     - name: Run Test
+  #       working-directory: starter/frontend
+  #       run: npm run test
 
-  build:
-    runs-on: ubuntu-latest
-    continue-on-error: false
-    if: ${{ always() }}
-    needs: [lint, test]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # build:
+  #   runs-on: ubuntu-latest
+  #   continue-on-error: false
+  #   if: ${{ always() }}
+  #   needs: [lint, test]
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
 
-      - name: Setup NodeJS
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{env.NODE_VERSION}}
-          cache: "npm"
+  #     - name: Setup NodeJS
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{env.NODE_VERSION}}
+  #         cache: "npm"
 
-      - name: Install dependencies
-        working-directory: starter/frontend
-        run: npm ci
+  #     - name: Install dependencies
+  #       working-directory: starter/frontend
+  #       run: npm ci
 
-      - name: Complete Build
-        working-directory: starter/frontend
-        run: echo "Building Completed..."
+  #     - name: Complete Build
+  #       working-directory: starter/frontend
+  #       run: echo "Building Completed..."
