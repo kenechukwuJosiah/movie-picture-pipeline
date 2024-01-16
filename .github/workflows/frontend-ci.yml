@@ -80,4 +80,4 @@ jobs:
         run: |
           echo "Building... ${{github.run_id}}"
           docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:3000/ --tag=${{github.run_id}}:latest .
-          docker run ${{github.run_id}} -p 3000:3000
+          docker run --name ${{github.run_id}} -p 3000:3000
