@@ -78,6 +78,6 @@ jobs:
       - name: Complete Build
         working-directory: starter/frontend
         run: |
-          echo "Building... ${{ github.ref }}"
-          docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:3000/ --tag=${{ github.ref }}:latest
-          docker run --name ${{ github.ref }} -p 3000:3000
+          echo "Building... $GITHUB_RUN_ID"
+          docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:3000/ --tag=$GITHUB_RUN_ID:latest
+          docker run --name $GITHUB_RUN_ID -p 3000:3000
