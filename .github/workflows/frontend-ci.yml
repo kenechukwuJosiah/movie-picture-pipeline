@@ -13,7 +13,7 @@ env:
 jobs:
   lint:
     runs-on: ubuntu-latest
-
+    continue-on-error: false
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -25,15 +25,14 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        working-directory: starter/frontend
-        run: npm install
+        run: cd starter/frontend && npm install
 
       - name: Run lint
-        run: cd starter/front && npm run lint
+        run: cd starter/frontend && npm run lint
 
   test:
     runs-on: ubuntu-latest
-
+    continue-on-error: false
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -45,15 +44,14 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        working-directory: starter/frontend
-        run: npm install
+        run: cd starter/frontend && npm install
 
       - name: Run Test
-        working-directory: starter/frontend
-        run: cd starter/front && npm run test
+        run: cd starter/frontend && npm run test
 
   build:
     runs-on: ubuntu-latest
+    continue-on-error: false
     if: ${{ always() }}
     needs: [lint, test]
     steps:
@@ -67,8 +65,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        working-directory: starter/frontend
-        run: npm install
+        run: cd starter/frontend && npm install
 
       - name: Complete Build
         working-directory: starter/frontend
