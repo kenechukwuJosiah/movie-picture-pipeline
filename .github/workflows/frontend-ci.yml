@@ -26,7 +26,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: starter/frontend
-        run: npm ci
+        run: npm install
 
       - name: Run lint
         run: cd starter/front && npm run lint
@@ -46,7 +46,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: starter/frontend
-        run: npm ci
+        run: npm install
 
       - name: Run Test
         working-directory: starter/frontend
@@ -68,7 +68,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: starter/frontend
-        run: npm ci
+        run: npm install
 
       - name: Complete Build
         working-directory: starter/frontend
