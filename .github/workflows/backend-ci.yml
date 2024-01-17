@@ -31,7 +31,6 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           pip install pipenv
           pipenv install
-          pipenv shell
 
       - name: Run lint
         working-directory: starter/backend
@@ -57,7 +56,6 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           pip install pipenv
           pipenv install
-          pipenv shell
 
       - name: Run Test
         working-directory: starter/frontend
@@ -85,7 +83,6 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           pip install pipenv
           pipenv install
-          pipenv shell
 
       - name: Build App
         working-directory: starter/backend
