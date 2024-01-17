@@ -27,7 +27,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: starter/backend
-        run: pip install
+        run: pip install --upgrade pip
 
       - name: Run lint
         working-directory: starter/backend
@@ -49,7 +49,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: starter/backend
-        run: pip install
+        run: pip install --upgrade pip
 
       - name: Run Test
         working-directory: starter/frontend
@@ -73,7 +73,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: starter/backend
-        run: pip install
+        run: pip install --upgrade pip
 
       - name: Build App
         working-directory: starter/backend
