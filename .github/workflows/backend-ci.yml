@@ -8,7 +8,7 @@ on:
 
 env:
   # Set Node.js Version
-  NODE_VERSION: "20.7.0"
+  PYTHON_VERSION: "3.9"
 
 jobs:
   lint:
@@ -18,20 +18,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup NodeJS
-        uses: actions/setup-node@v3
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          node-version: ${{env.NODE_VERSION}}
-          cache: "npm"
-          cache-dependency-path: starter/frontend/package-lock.json
+          python-version: ${{env.PYTHON_VERSION}}
+          cache: "pip"
+          cache-dependency-path: starter/backend/Pipfile.lock
 
       - name: Install dependencies
-        working-directory: starter/frontend
-        run: npm ci
+        working-directory: starter/backend
+        run: pip install
 
       - name: Run lint
-        working-directory: starter/frontend
-        run: npm run lint
+        working-directory: starter/backend
+        run: pipenv run lint
 
   test:
     runs-on: ubuntu-latest
@@ -40,20 +40,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup NodeJS
-        uses: actions/setup-node@v3
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          node-version: ${{env.NODE_VERSION}}
-          cache: "npm"
-          cache-dependency-path: starter/frontend/package-lock.json
+          python-version: ${{env.PYTHON_VERSION}}
+          cache: "pip"
+          cache-dependency-path: starter/backend/Pipfile.lock
 
       - name: Install dependencies
-        working-directory: starter/frontend
-        run: npm ci
+        working-directory: starter/backend
+        run: pip install
 
       - name: Run Test
         working-directory: starter/frontend
-        run: npm run test
+        run: pipenv run test
 
   build:
     runs-on: ubuntu-latest
@@ -64,20 +64,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup NodeJS
-        uses: actions/setup-node@v3
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          node-version: ${{env.NODE_VERSION}}
-          cache: "npm"
-          cache-dependency-path: starter/frontend/package-lock.json
+          python-version: ${{env.PYTHON_VERSION}}
+          cache: "pip"
+          cache-dependency-path: starter/backend/Pipfile.lock
 
       - name: Install dependencies
-        working-directory: starter/frontend
-        run: npm ci
+        working-directory: starter/backend
+        run: pip install
 
       - name: Build App
-        working-directory: starter/frontend
+        working-directory: starter/backend
         run: |
-          echo "Building... $GITHUB_RUN_ID"
-          docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:3000/ --tag=$GITHUB_RUN_ID:latest .
-          docker run --name $GITHUB_RUN_ID -p 3000:3000
+          echo "Building... ${{github.sha}}"
+          docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:3000/ --tag= ${{github.sha}}:latest .

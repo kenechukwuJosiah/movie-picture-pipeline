@@ -78,6 +78,5 @@ jobs:
       - name: Build App
         working-directory: starter/frontend
         run: |
-          echo "Building... ${{github.run_id}}"
-          docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:3000/ -t ${{github.run_id}}:latest .
-          docker run -p 3000:3000 -d ${{github.run_id}}
+          echo "Building... ${{github.sha}}"
+          docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:3000/ -t ${{github.sha}}:latest .
