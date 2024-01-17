@@ -91,4 +91,4 @@ jobs:
         working-directory: starter/backend
         run: |
           echo "Building... ${{github.sha}}"
-          docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:3000/ --tag= ${{github.sha}}:latest .
+          docker build --build-arg FLASK_RUN_HOST=127.0.0.1 -t ${{github.sha}}:latest .
