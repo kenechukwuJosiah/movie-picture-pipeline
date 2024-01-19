@@ -84,3 +84,16 @@ jobs:
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG --build-arg REACT_APP_MOVIE_API_URL=http://localhost:3000/ .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
+      - name: Configure Kubectl
+        run: aws keks configure-kubeconfig --name movie-picture   --region us-east-1
+
+      - name: Deploy Applicaton
+        working-directory: starter/frontend/k8s
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: movie-picture
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          kustomize edit set image frontend=$REGISTRY/$REPOSITORY:$IMAGE_TAG
+          kubectl apply -f
