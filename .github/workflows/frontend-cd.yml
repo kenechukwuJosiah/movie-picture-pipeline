@@ -86,7 +86,7 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
       - name: Configure Kubectl
-        run: aws eks configure-kubeconfig --name movie-picture   --region us-east-1
+        run: aws eks update-kubeconfig --name movie-picture   --region us-east-1
 
       - name: Deploy Applicaton
         working-directory: starter/frontend/k8s
