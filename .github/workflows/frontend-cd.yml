@@ -95,5 +95,6 @@ jobs:
           REPOSITORY: movie-picture
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          echo "image: $REGISTRY/$REPOSITORY:$IMAGE_TAG"
           kustomize edit set image frontend=$REGISTRY/$REPOSITORY:$IMAGE_TAG
-          kubectl apply -f
+          kubectl apply -f -
