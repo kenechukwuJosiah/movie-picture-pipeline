@@ -97,4 +97,4 @@ jobs:
         run: |
           echo "image: $REGISTRY/$REPOSITORY:$IMAGE_TAG"
           kustomize edit set image frontend=$REGISTRY/$REPOSITORY:$IMAGE_TAG
-          kubectl apply -f -
+          kubectl apply -f ./
