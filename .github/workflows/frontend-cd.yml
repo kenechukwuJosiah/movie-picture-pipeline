@@ -79,7 +79,7 @@ jobs:
         working-directory: starter/frontend
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: movie-pickture
+          REPOSITORY: movie-picture
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG --build-arg REACT_APP_MOVIE_API_URL=http://localhost:3000/ .
