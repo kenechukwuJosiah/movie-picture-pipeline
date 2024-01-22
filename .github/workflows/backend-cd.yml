@@ -1,0 +1,108 @@
+name: Backend Continuous Deployment
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+env:
+  # Set Node.js Version
+  NODE_VERSION: "20.7.0"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{env.PYTHON_VERSION}}
+          cache: "pip"
+          cache-dependency-path: starter/backend/Pipfile.lock
+
+      - name: Install dependencies
+        working-directory: starter/backend
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install pipenv
+          pip install flake8
+          pipenv install
+
+      - name: Run lint
+        working-directory: starter/backend
+        run: pipenv run lint
+
+  test:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{env.PYTHON_VERSION}}
+          cache: "pip"
+          cache-dependency-path: starter/backend/Pipfile.lock
+
+      - name: Install dependencies
+        working-directory: starter/backend
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install pipenv
+          pip install flake8
+          pipenv install
+
+      - name: Run Test
+        working-directory: starter/backend
+        run: pipenv run test
+
+  build:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    if: ${{ always() }}
+    needs: [lint, test]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push docker image to Amazon ECR
+        working-directory: starter/backend
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: movie-picture
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG --build-arg REACT_APP_MOVIE_API_URL=http://localhost:3000/ .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
+      - name: Configure Kubectl
+        run: aws eks update-kubeconfig --name movie-picture --region us-east-1
+
+      - name: Deploy Applicaton
+        working-directory: starter/backend/k8s
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: movie-picture
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          echo "image: $REGISTRY/$REPOSITORY:$IMAGE_TAG"
+          kustomize edit set image backend=$REGISTRY/$REPOSITORY:$IMAGE_TAG
+          kustomize build | kubectl apply -f -
